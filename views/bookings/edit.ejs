@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Booking - Pet Booking System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">Pet Booking System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/owners">Owners</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pets">Pets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/bookings">Bookings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h2>Edit Booking</h2>
+                <form method="POST" action="/bookings/edit/<%= booking.booking_id %>">
+                    <div class="mb-3">
+                        <label for="pet_id" class="form-label">Pet</label>
+                        <select class="form-select" id="pet_id" name="pet_id" required>
+                            <% pets.forEach(function(pet) { %>
+                                <option value="<%= pet.pet_id %>" <%=booking.pet_id==pet.pet_id ? 'selected' : '' %>>
+                                    <%= pet.pet_name %>
+                                </option>
+                                <% }); %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="service_id" class="form-label">Service</label>
+                        <select class="form-select" id="service_id" name="service_id" required>
+                            <% services.forEach(function(service) { %>
+                                <option value="<%= service.service_id %>" <%=booking.service_id==service.service_id
+                                    ? 'selected' : '' %>>
+                                    <%= service.service_name %> - $<%= Number(service.cost).toFixed(2) %>
+                                </option>
+                                <% }); %>
+                        </select>
+                    </div>
+
+
+                    <!-- Calendar Picker with existing value -->
+                    <div class="mb-3">
+                        <label for="booking_date" class="form-label">Booking Date</label>
+                        <input type="date" class="form-control" id="booking_date" name="booking_date"
+                            value="<%= booking.booking_date.toISOString().split('T')[0] %>"
+                            min="<%= new Date().toISOString().split('T')[0] %>" required>
+                        </div>
+                        
+                    <!-- Time Picker with existing value -->
+                    <div class="mb-3">
+                        <label for="booking_time" class="form-label">Booking Time</label>
+                        <input type="time" class="form-control" id="booking_time" name="booking_time"
+                            value="<%= booking.booking_time %>" min="09:00" max="17:00" required>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="Pending" <%=booking.status==='Pending' ? 'selected' : '' %>>Pending</option>
+                            <option value="Confirmed" <%=booking.status==='Confirmed' ? 'selected' : '' %>>Confirmed
+                            </option>
+                            <option value="Completed" <%=booking.status==='Completed' ? 'selected' : '' %>>Completed
+                            </option>
+                            <option value="Cancelled" <%=booking.status==='Cancelled' ? 'selected' : '' %>>Cancelled
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"><%= booking.notes %></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Booking</button>
+                    <a href="/bookings" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
