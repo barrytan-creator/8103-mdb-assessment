@@ -1,19 +1,17 @@
 
--- Create database if it doesn't exist
 CREATE DATABASE IF NOT EXISTS pet_booking_system;
 
 -- Switch to the database
 USE pet_booking_system;
 
--- Drop existing tables if they exist (in correct order due to foreign keys)
+
 DROP TABLE IF EXISTS bookings;
 DROP TABLE IF EXISTS pets;
 DROP TABLE IF EXISTS services;
 DROP TABLE IF EXISTS owners;
 
--- ============================================
+
 -- TABLE 1: OWNERS
--- ============================================
 CREATE TABLE owners (
     owner_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     owner_name VARCHAR(100) NOT NULL,
@@ -23,9 +21,8 @@ CREATE TABLE owners (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- ============================================
+
 -- TABLE 2: SERVICES
--- ============================================
 CREATE TABLE services (
     service_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     service_name VARCHAR(100) NOT NULL,
@@ -34,9 +31,8 @@ CREATE TABLE services (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- ============================================
+
 -- TABLE 3: PETS
--- ============================================
 CREATE TABLE pets (
     pet_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     pet_name VARCHAR(100) NOT NULL,
@@ -52,9 +48,8 @@ ALTER TABLE pets ADD CONSTRAINT fk_pets_owners
     FOREIGN KEY (owner_id) REFERENCES owners(owner_id)
     ON DELETE CASCADE;
 
--- ============================================
+
 -- TABLE 4: BOOKINGS
--- ============================================
 CREATE TABLE bookings (
     booking_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     pet_id INT UNSIGNED NOT NULL,
@@ -75,5 +70,5 @@ ALTER TABLE bookings ADD CONSTRAINT fk_bookings_services
     FOREIGN KEY (service_id) REFERENCES services(service_id)
     ON DELETE CASCADE;
 
--- Show all tables
+
 SHOW TABLES;

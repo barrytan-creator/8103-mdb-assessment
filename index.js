@@ -15,10 +15,10 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-// Serve static files (optional)
+// Serve static files
 app.use(express.static('public'));
 
-// Database connection pool
+// Database connection
 const dbConfig = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -29,17 +29,14 @@ const dbConfig = {
 
 const dbConnection = mysql2.createPool(dbConfig);
 
-// ============================================
+
 // HOME ROUTE
-// ============================================
+
 app.get('/', function(req, res) {
     res.render('home');
 });
 
-// ============================================
 // SERVICES ROUTES
-// ============================================
-
 // List all services
 app.get('/services', async function(req, res) {
     try {
@@ -140,10 +137,8 @@ app.post('/services/delete/:service_id', async function(req, res) {
     }
 });
 
-// ============================================
-// OWNERS ROUTES
-// ============================================
 
+// OWNERS ROUTES
 // List all owners
 app.get('/owners', async function(req, res) {
     try {
@@ -279,10 +274,7 @@ app.post('/owners/delete/:owner_id', async function(req, res) {
     }
 });
 
-// ============================================
 // PETS ROUTES
-// ============================================
-
 // List all pets with owner info
 app.get('/pets', async function(req, res) {
     try {
@@ -420,10 +412,8 @@ app.post('/pets/delete/:pet_id', async function(req, res) {
     }
 });
 
-// ============================================
-// BOOKINGS ROUTES
-// ============================================
 
+// BOOKINGS ROUTES
 // List all bookings with related info
 app.get('/bookings', async function(req, res) {
     try {
@@ -554,9 +544,7 @@ app.post('/bookings/delete/:booking_id', async function(req, res) {
     }
 });
 
-// ============================================
 // START SERVER
-// ============================================
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

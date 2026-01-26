@@ -1,8 +1,6 @@
 USE pet_booking_system;
 
--- ============================================
--- SAMPLE DATA: OWNERS
--- ============================================
+-- DATA: OWNERS
 INSERT INTO owners (owner_name, contact_number, email, address) VALUES
 ('Sarah Johnson', '91234567', 'sarah.j@email.com', '123 Orchard Road, Singapore 238858'),
 ('Michael Tan', '98765432', 'michael.tan@email.com', '456 Clementi Ave 3, Singapore 129876'),
@@ -10,9 +8,8 @@ INSERT INTO owners (owner_name, contact_number, email, address) VALUES
 ('David Lim', '92345678', 'david.lim@email.com', '321 Jurong West St 52, Singapore 640321'),
 ('Rachel Ng', '93456789', 'rachel.ng@email.com', '654 Tampines Ave 9, Singapore 521654');
 
--- ============================================
+
 -- SAMPLE DATA: SERVICES
--- ============================================
 INSERT INTO services (service_name, description, cost) VALUES
 ('Basic Grooming', 'Bath, brush, nail trim, ear cleaning', 45.00),
 ('Full Grooming', 'Basic grooming plus haircut', 85.00),
@@ -23,9 +20,8 @@ INSERT INTO services (service_name, description, cost) VALUES
 ('Adoption Services', 'Adoption processing and documentation', 150.00),
 ('Pet Transportation', 'Safe pet transportation', 40.00);
 
--- ============================================
+
 -- SAMPLE DATA: PETS
--- ============================================
 INSERT INTO pets (pet_name, species, breed, age, owner_id) VALUES
 ('Buddy', 'Dog', 'Golden Retriever', 3, 1),
 ('Whiskers', 'Cat', 'Persian', 2, 1),
@@ -36,9 +32,8 @@ INSERT INTO pets (pet_name, species, breed, age, owner_id) VALUES
 ('Milo', 'Cat', 'British Shorthair', 3, 5),
 ('Rocky', 'Dog', 'Bulldog', 6, 5);
 
--- ============================================
+
 -- SAMPLE DATA: BOOKINGS
--- ============================================
 INSERT INTO bookings (pet_id, service_id, booking_date, booking_time, status, notes) VALUES
 (1, 2, '2024-03-15', '10:00:00', 'Confirmed', 'First time customer'),
 (1, 4, '2024-03-20', '14:30:00', 'Confirmed', 'Annual checkup'),
