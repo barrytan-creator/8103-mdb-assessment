@@ -32,13 +32,13 @@ const dbConnection = mysql2.createPool(dbConfig);
 
 // HOME ROUTE
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.render('home');
 });
 
 // SERVICES ROUTES
 // List all services
-app.get('/services', async function(req, res) {
+app.get('/services', async function (req, res) {
     try {
         const sql = 'SELECT * FROM services ORDER BY service_id DESC';
         const [services] = await dbConnection.query(sql);
@@ -52,12 +52,12 @@ app.get('/services', async function(req, res) {
 });
 
 // Display create form
-app.get('/services/create', function(req, res) {
+app.get('/services/create', function (req, res) {
     res.render('services/create');
 });
 
 // Process create form
-app.post('/services/create', async function(req, res) {
+app.post('/services/create', async function (req, res) {
     try {
         const { service_name, description, cost } = req.body;
         const sql = `INSERT INTO services (service_name, description, cost)
@@ -72,7 +72,7 @@ app.post('/services/create', async function(req, res) {
 });
 
 // Display edit form
-app.get('/services/edit/:service_id', async function(req, res) {
+app.get('/services/edit/:service_id', async function (req, res) {
     try {
         const service_id = req.params.service_id;
         const [services] = await dbConnection.execute(
@@ -90,7 +90,7 @@ app.get('/services/edit/:service_id', async function(req, res) {
 });
 
 // Process edit form
-app.post('/services/edit/:service_id', async function(req, res) {
+app.post('/services/edit/:service_id', async function (req, res) {
     try {
         const service_id = req.params.service_id;
         const { service_name, description, cost } = req.body;
@@ -107,7 +107,7 @@ app.post('/services/edit/:service_id', async function(req, res) {
 });
 
 // Display delete confirmation
-app.get('/services/delete/:service_id', async function(req, res) {
+app.get('/services/delete/:service_id', async function (req, res) {
     try {
         const service_id = req.params.service_id;
         const [services] = await dbConnection.execute(
@@ -125,7 +125,7 @@ app.get('/services/delete/:service_id', async function(req, res) {
 });
 
 // Process delete
-app.post('/services/delete/:service_id', async function(req, res) {
+app.post('/services/delete/:service_id', async function (req, res) {
     try {
         const service_id = req.params.service_id;
         const sql = 'DELETE FROM services WHERE service_id = ?';
@@ -140,7 +140,7 @@ app.post('/services/delete/:service_id', async function(req, res) {
 
 // OWNERS ROUTES
 // List all owners
-app.get('/owners', async function(req, res) {
+app.get('/owners', async function (req, res) {
     try {
         const sql = 'SELECT * FROM owners ORDER BY owner_id DESC';
         const [owners] = await dbConnection.query(sql);
@@ -154,12 +154,12 @@ app.get('/owners', async function(req, res) {
 });
 
 // Display create form
-app.get('/owners/create', function(req, res) {
+app.get('/owners/create', function (req, res) {
     res.render('owners/create');
 });
 
 // Process create form
-app.post('/owners/create', async function(req, res) {
+app.post('/owners/create', async function (req, res) {
     try {
         const { owner_name, contact_number, email, address } = req.body;
         const sql = `INSERT INTO owners (owner_name, contact_number, email, address)
@@ -174,7 +174,7 @@ app.post('/owners/create', async function(req, res) {
 });
 
 // Display edit form
-app.get('/owners/edit/:owner_id', async function(req, res) {
+app.get('/owners/edit/:owner_id', async function (req, res) {
     try {
         const owner_id = req.params.owner_id;
         const [owners] = await dbConnection.execute(
@@ -192,7 +192,7 @@ app.get('/owners/edit/:owner_id', async function(req, res) {
 });
 
 // Process edit form
-app.post('/owners/edit/:owner_id', async function(req, res) {
+app.post('/owners/edit/:owner_id', async function (req, res) {
     try {
         const owner_id = req.params.owner_id;
         const { owner_name, contact_number, email, address } = req.body;
@@ -209,7 +209,7 @@ app.post('/owners/edit/:owner_id', async function(req, res) {
 });
 
 // Display delete confirmation
-app.get('/owners/delete/:owner_id', async function(req, res) {
+app.get('/owners/delete/:owner_id', async function (req, res) {
     try {
         const owner_id = req.params.owner_id;
         const [owners] = await dbConnection.execute(
@@ -227,40 +227,40 @@ app.get('/owners/delete/:owner_id', async function(req, res) {
 });
 
 // Process delete - FIXED VERSION WITH CASCADE DELETE
-app.post('/owners/delete/:owner_id', async function(req, res) {
+app.post('/owners/delete/:owner_id', async function (req, res) {
     const connection = await dbConnection.getConnection();
     try {
         const owner_id = req.params.owner_id;
-        
+
         // Start transaction
         await connection.beginTransaction();
-        
+
         // Step 1: Get all pets belonging to this owner
         const [pets] = await connection.query(
-            'SELECT pet_id FROM pets WHERE owner_id = ?', 
+            'SELECT pet_id FROM pets WHERE owner_id = ?',
             [owner_id]
         );
-        
+
         // Step 2: Delete all bookings for these pets
         for (let pet of pets) {
             await connection.query(
-                'DELETE FROM bookings WHERE pet_id = ?', 
+                'DELETE FROM bookings WHERE pet_id = ?',
                 [pet.pet_id]
             );
         }
-        
+
         // Step 3: Delete all pets belonging to this owner
         await connection.query(
-            'DELETE FROM pets WHERE owner_id = ?', 
+            'DELETE FROM pets WHERE owner_id = ?',
             [owner_id]
         );
-        
+
         // Step 4: Finally, delete the owner
         await connection.query(
-            'DELETE FROM owners WHERE owner_id = ?', 
+            'DELETE FROM owners WHERE owner_id = ?',
             [owner_id]
         );
-        
+
         // Commit transaction
         await connection.commit();
         res.redirect('/owners');
@@ -276,7 +276,7 @@ app.post('/owners/delete/:owner_id', async function(req, res) {
 
 // PETS ROUTES
 // List all pets with owner info
-app.get('/pets', async function(req, res) {
+app.get('/pets', async function (req, res) {
     try {
         const sql = `SELECT pets.*, owners.owner_name 
                      FROM pets 
@@ -293,7 +293,7 @@ app.get('/pets', async function(req, res) {
 });
 
 // Display create form
-app.get('/pets/create', async function(req, res) {
+app.get('/pets/create', async function (req, res) {
     try {
         const [owners] = await dbConnection.query('SELECT * FROM owners ORDER BY owner_name');
         res.render('pets/create', {
@@ -306,7 +306,7 @@ app.get('/pets/create', async function(req, res) {
 });
 
 // Process create form
-app.post('/pets/create', async function(req, res) {
+app.post('/pets/create', async function (req, res) {
     try {
         const { pet_name, species, breed, age, owner_id } = req.body;
         const sql = `INSERT INTO pets (pet_name, species, breed, age, owner_id)
@@ -321,7 +321,7 @@ app.post('/pets/create', async function(req, res) {
 });
 
 // Display edit form
-app.get('/pets/edit/:pet_id', async function(req, res) {
+app.get('/pets/edit/:pet_id', async function (req, res) {
     try {
         const pet_id = req.params.pet_id;
         const [pets] = await dbConnection.execute(
@@ -341,7 +341,7 @@ app.get('/pets/edit/:pet_id', async function(req, res) {
 });
 
 // Process edit form
-app.post('/pets/edit/:pet_id', async function(req, res) {
+app.post('/pets/edit/:pet_id', async function (req, res) {
     try {
         const pet_id = req.params.pet_id;
         const { pet_name, species, breed, age, owner_id } = req.body;
@@ -358,7 +358,7 @@ app.post('/pets/edit/:pet_id', async function(req, res) {
 });
 
 // Display delete confirmation
-app.get('/pets/delete/:pet_id', async function(req, res) {
+app.get('/pets/delete/:pet_id', async function (req, res) {
     try {
         const pet_id = req.params.pet_id;
         const [pets] = await dbConnection.execute(
@@ -379,26 +379,26 @@ app.get('/pets/delete/:pet_id', async function(req, res) {
 });
 
 // Process delete - WITH CASCADE DELETE FOR BOOKINGS
-app.post('/pets/delete/:pet_id', async function(req, res) {
+app.post('/pets/delete/:pet_id', async function (req, res) {
     const connection = await dbConnection.getConnection();
     try {
         const pet_id = req.params.pet_id;
-        
+
         // Start transaction
         await connection.beginTransaction();
-        
+
         // Step 1: Delete all bookings for this pet
         await connection.query(
-            'DELETE FROM bookings WHERE pet_id = ?', 
+            'DELETE FROM bookings WHERE pet_id = ?',
             [pet_id]
         );
-        
+
         // Step 2: Delete the pet
         await connection.query(
-            'DELETE FROM pets WHERE pet_id = ?', 
+            'DELETE FROM pets WHERE pet_id = ?',
             [pet_id]
         );
-        
+
         // Commit transaction
         await connection.commit();
         res.redirect('/pets');
@@ -415,7 +415,7 @@ app.post('/pets/delete/:pet_id', async function(req, res) {
 
 // BOOKINGS ROUTES
 // List all bookings with related info
-app.get('/bookings', async function(req, res) {
+app.get('/bookings', async function (req, res) {
     try {
         const sql = `SELECT bookings.*, 
                             pets.pet_name, 
@@ -437,8 +437,35 @@ app.get('/bookings', async function(req, res) {
     }
 });
 
+// Show delete confirmation
+app.get('/bookings/delete/:id', async function (req, res) {
+    try {
+        const bookingId = req.params.id;
+        const [bookings] = await dbConnection.execute(
+            `SELECT bookings.*, 
+                    pets.pet_name, 
+                    services.service_name
+             FROM bookings 
+             JOIN pets ON bookings.pet_id = pets.pet_id
+             JOIN services ON bookings.service_id = services.service_id
+             WHERE booking_id = ?`,
+            [bookingId]
+        );
+
+        if (bookings.length === 0) {
+            return res.status(404).send('Booking not found');
+        }
+
+        res.render('bookings/delete', { booking: bookings[0] });
+    } catch (error) {
+        console.error('Error loading delete confirmation:', error);
+        res.status(500).send('Error loading confirmation');
+    }
+});
+
+
 // Display create form
-app.get('/bookings/create', async function(req, res) {
+app.get('/bookings/create', async function (req, res) {
     try {
         const [pets] = await dbConnection.query('SELECT * FROM pets ORDER BY pet_name');
         const [services] = await dbConnection.query('SELECT * FROM services ORDER BY service_name');
@@ -453,7 +480,7 @@ app.get('/bookings/create', async function(req, res) {
 });
 
 // Process create form
-app.post('/bookings/create', async function(req, res) {
+app.post('/bookings/create', async function (req, res) {
     try {
         const { pet_id, service_id, booking_date, booking_time, status, notes } = req.body;
         const sql = `INSERT INTO bookings (pet_id, service_id, booking_date, booking_time, status, notes)
@@ -468,7 +495,7 @@ app.post('/bookings/create', async function(req, res) {
 });
 
 // Display edit form
-app.get('/bookings/edit/:booking_id', async function(req, res) {
+app.get('/bookings/edit/:booking_id', async function (req, res) {
     try {
         const booking_id = req.params.booking_id;
         const [bookings] = await dbConnection.execute(
@@ -490,7 +517,7 @@ app.get('/bookings/edit/:booking_id', async function(req, res) {
 });
 
 // Process edit form
-app.post('/bookings/edit/:booking_id', async function(req, res) {
+app.post('/bookings/edit/:booking_id', async function (req, res) {
     try {
         const booking_id = req.params.booking_id;
         const { pet_id, service_id, booking_date, booking_time, status, notes } = req.body;
@@ -508,7 +535,7 @@ app.post('/bookings/edit/:booking_id', async function(req, res) {
 });
 
 // Display delete confirmation
-app.get('/bookings/delete/:booking_id', async function(req, res) {
+app.get('/bookings/delete/:booking_id', async function (req, res) {
     try {
         const booking_id = req.params.booking_id;
         const [bookings] = await dbConnection.execute(
@@ -532,7 +559,7 @@ app.get('/bookings/delete/:booking_id', async function(req, res) {
 });
 
 // Process delete
-app.post('/bookings/delete/:booking_id', async function(req, res) {
+app.post('/bookings/delete/:booking_id', async function (req, res) {
     try {
         const booking_id = req.params.booking_id;
         const sql = 'DELETE FROM bookings WHERE booking_id = ?';
