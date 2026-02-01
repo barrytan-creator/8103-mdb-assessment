@@ -29,9 +29,7 @@ const dbConfig = {
 
 const dbConnection = mysql2.createPool(dbConfig);
 
-
 // HOME ROUTE
-
 app.get('/', function (req, res) {
     res.render('home');
 });
@@ -137,7 +135,6 @@ app.post('/services/delete/:service_id', async function (req, res) {
     }
 });
 
-
 // OWNERS ROUTES
 // List all owners
 app.get('/owners', async function (req, res) {
@@ -226,7 +223,7 @@ app.get('/owners/delete/:owner_id', async function (req, res) {
     }
 });
 
-// Process delete - FIXED VERSION WITH CASCADE DELETE
+// Process delete - WITH CASCADE DELETE
 app.post('/owners/delete/:owner_id', async function (req, res) {
     const connection = await dbConnection.getConnection();
     try {
@@ -412,7 +409,6 @@ app.post('/pets/delete/:pet_id', async function (req, res) {
     }
 });
 
-
 // BOOKINGS ROUTES
 // List all bookings with related info
 app.get('/bookings', async function (req, res) {
@@ -460,6 +456,57 @@ app.get('/bookings/delete/:id', async function (req, res) {
     } catch (error) {
         console.error('Error loading delete confirmation:', error);
         res.status(500).send('Error loading confirmation');
+    }
+});
+
+
+// 2. Search bookings (MUST BE BEFORE :booking_id ROUTES!)
+app.get('/bookings/search', async function (req, res) {
+    try {
+        const { start_date, end_date, status } = req.query;
+
+        let sql = `SELECT bookings.*, 
+                          pets.pet_name, 
+                          owners.owner_name,
+                          services.service_name, 
+                          services.cost
+                   FROM bookings 
+                   JOIN pets ON bookings.pet_id = pets.pet_id
+                   JOIN owners ON pets.owner_id = owners.owner_id
+                   JOIN services ON bookings.service_id = services.service_id
+                   WHERE 1=1`;
+
+        const values = [];
+
+        // Filter by start date
+        if (start_date) {
+            sql += ` AND bookings.booking_date >= ?`;
+            values.push(start_date);
+        }
+
+        // Filter by end date
+        if (end_date) {
+            sql += ` AND bookings.booking_date <= ?`;
+            values.push(end_date);
+        }
+
+        // Filter by status
+        if (status) {
+            sql += ` AND bookings.status = ?`;
+            values.push(status);
+        }
+
+        sql += ` ORDER BY bookings.booking_date DESC, bookings.booking_time DESC`;
+
+        const [bookings] = await dbConnection.execute(sql, values);
+
+        res.render('bookings/search', {
+            bookings: bookings,
+            search: { start_date, end_date, status }
+        });
+    } catch (error) {
+        console.error('Error searching bookings:', error);
+        res.status(500).send('Error searching bookings');
     }
 });
 

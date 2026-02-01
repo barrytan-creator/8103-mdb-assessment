@@ -9,7 +9,7 @@ INSERT INTO owners (owner_name, contact_number, email, address) VALUES
 ('Rachel Ng', '93456789', 'rachel.ng@email.com', '654 Tampines Ave 9, Singapore 521654');
 
 
--- SAMPLE DATA: SERVICES
+-- DATA: SERVICES
 INSERT INTO services (service_name, description, cost) VALUES
 ('Basic Grooming', 'Bath, brush, nail trim, ear cleaning', 45.00),
 ('Full Grooming', 'Basic grooming plus haircut', 85.00),
@@ -21,7 +21,7 @@ INSERT INTO services (service_name, description, cost) VALUES
 ('Pet Transportation', 'Safe pet transportation', 40.00);
 
 
--- SAMPLE DATA: PETS
+-- DATA: PETS
 INSERT INTO pets (pet_name, species, breed, age, owner_id) VALUES
 ('Buddy', 'Dog', 'Golden Retriever', 3, 1),
 ('Whiskers', 'Cat', 'Persian', 2, 1),
