@@ -21,7 +21,7 @@ INSERT INTO services (service_name, description, cost) VALUES
 ('Pet Transportation', 'Safe pet transportation', 40.00);
 
 
--- DATA: PETS
+-- DATA: PETS example
 INSERT INTO pets (pet_name, species, breed, age, owner_id) VALUES
 ('Buddy', 'Dog', 'Golden Retriever', 3, 1),
 ('Whiskers', 'Cat', 'Persian', 2, 1),
@@ -30,26 +30,30 @@ INSERT INTO pets (pet_name, species, breed, age, owner_id) VALUES
 ('Charlie', 'Dog', 'Beagle', 4, 3),
 ('Bella', 'Dog', 'Poodle', 2, 4),
 ('Milo', 'Cat', 'British Shorthair', 3, 5),
-('Rocky', 'Dog', 'Bulldog', 6, 5);
+('Rocky', 'Dog', 'Bulldog', 6, 7);
 
-
--- SAMPLE DATA: BOOKINGS
-INSERT INTO bookings (pet_id, service_id, booking_date, booking_time, status, notes) VALUES
-(1, 2, '2024-03-15', '10:00:00', 'Confirmed', 'First time customer'),
-(1, 4, '2024-03-20', '14:30:00', 'Confirmed', 'Annual checkup'),
-(2, 1, '2024-03-16', '11:00:00', 'Completed', 'Very well behaved'),
-(3, 5, '2024-03-18', '09:00:00', 'Confirmed', 'Rabies vaccination due'),
-(4, 1, '2024-03-19', '15:00:00', 'Pending', 'First grooming session'),
-(5, 6, '2024-03-21', '08:00:00', 'Confirmed', 'Morning walk preferred'),
-(6, 3, '2024-03-22', '13:00:00', 'Confirmed', 'Birthday spa treatment'),
-(7, 1, '2024-03-23', '10:30:00', 'Pending', NULL),
-(8, 4, '2024-03-24', '16:00:00', 'Confirmed', 'Senior dog checkup'),
-(1, 6, '2024-03-25', '07:30:00', 'Pending', 'Early morning walk'),
-(3, 2, '2024-03-26', '11:30:00', 'Confirmed', 'Regular customer'),
-(5, 8, '2024-03-27', '14:00:00', 'Pending', 'Transport to vet clinic');
 
 -- Verify data
+show tables;
+DESCRIBE bookings;
+DESCRIBE owners;
+DESCRIBE pets;
+DESCRIBE services;
+DESCRIBE bookings
+
+SHOW CREATE TABLE owners;
+SHOW CREATE TABLE pets;
+SHOW CREATE TABLE services;
+SHOW CREATE TABLE bookings;
+
 SELECT * FROM owners;
 SELECT * FROM services;
 SELECT * FROM pets;
 SELECT * FROM bookings;
+SELECT COUNT(*) AS total_bookings FROM bookings;
+
+Insert BOOKINGS example:
+INSERT INTO bookings (pet_id, service_id, booking_date, booking_time, status, notes) VALUES
+(4, 7, '2024-03-29', '09:30:00', 'Pending', 'Interested in adoption process');
+(6, 2, '2024-03-30', '14:00:00', 'Confirmed', 'Full grooming with poodle cut');
+(7, 4, '2024-03-31', '11:00:00', 'Completed', 'Health certificate issued');

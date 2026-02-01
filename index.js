@@ -433,32 +433,6 @@ app.get('/bookings', async function (req, res) {
     }
 });
 
-// Show delete confirmation
-app.get('/bookings/delete/:id', async function (req, res) {
-    try {
-        const bookingId = req.params.id;
-        const [bookings] = await dbConnection.execute(
-            `SELECT bookings.*, 
-                    pets.pet_name, 
-                    services.service_name
-             FROM bookings 
-             JOIN pets ON bookings.pet_id = pets.pet_id
-             JOIN services ON bookings.service_id = services.service_id
-             WHERE booking_id = ?`,
-            [bookingId]
-        );
-
-        if (bookings.length === 0) {
-            return res.status(404).send('Booking not found');
-        }
-
-        res.render('bookings/delete', { booking: bookings[0] });
-    } catch (error) {
-        console.error('Error loading delete confirmation:', error);
-        res.status(500).send('Error loading confirmation');
-    }
-});
-
 
 // 2. Search bookings (MUST BE BEFORE :booking_id ROUTES!)
 app.get('/bookings/search', async function (req, res) {
